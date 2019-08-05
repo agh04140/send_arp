@@ -38,8 +38,8 @@ typedef struct arp {
 } arp;
 
 void usage() {
-    printf("syntax: pcap_test <interface> <sender ip> <target ip>\n");
-    printf("sample: pcap_test ens33 192.168.0.15 192.168.0.178\n");
+    printf("syntax: send_arp <interface> <sender ip> <target ip>\n");
+    printf("sample: send_arp ens33 192.168.0.15 192.168.0.178\n");
 }
 
 void insert_ip(uint8_t *dst, char*src) {
