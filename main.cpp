@@ -56,7 +56,7 @@ uint16_t my_ntohs(uint16_t num) {
         return ((num & 0xff00) >> 8) + ((num & 0xff) << 8);
 }
 
-void arp_set(arp* packet) {
+void init_arp(arp* packet) {
     packet->eth.type = my_ntohs(ARP);
     packet->h_type = my_ntohs(ETH);
     packet->p_type = my_ntohs(IPV4);
@@ -80,7 +80,12 @@ int main (int argc, char *argv[], char *envp[]) {
     arp* packet;
     arp *send;
     arp *spoofing;
-    
+
+    if(argc != 4) {
+	usage();
+	return -1;
+	}
+
     strncpy(sender_ip, argv[2], 15);
     strncpy(target_ip, argv[3], 15);
 
@@ -88,11 +93,8 @@ int main (int argc, char *argv[], char *envp[]) {
     spoofing = (arp*)malloc(sizeof(arp));
 
     setvbuf(stdout, 0LL, 1, 0LL);    
-    if (argc != 4) {
-	usage();
-	return -1;
-    }
-    
+   	setvbuf(stderr, 0LL, 1, 0LL); 
+
     fp = pcap_open_live(iface, BUFSIZ, 1, 1000, errbuf);
     
     if (fp == NULL) {
@@ -109,7 +111,7 @@ int main (int argc, char *argv[], char *envp[]) {
 	send->target_mac[i] = my_mac[i];
     }
 
-    arp_set(send);
+    init_arp(send);
     send->opcode = my_ntohs(REQUEST);
     insert_ip(send->sender_ip, sender_ip);
     insert_ip(send->target_ip, target_ip);
@@ -140,7 +142,7 @@ int main (int argc, char *argv[], char *envp[]) {
 	    }
 	}
     }
-    arp_set(spoofing);
+    init_arp(spoofing);
     spoofing->opcode = my_ntohs(REPLY);
     for(i = 0; i < 6; ++i) {
 	spoofing->eth.src_mac[i] = my_mac[i];
@@ -207,3 +209,4 @@ int get_mac(uint8_t *dst) {
  
     return( 1 );
 }
+
