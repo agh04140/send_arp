@@ -84,7 +84,7 @@ int main (int argc, char *argv[], char *envp[]) {
     if(argc != 4) {
 	usage();
 	return -1;
-	}
+    }
 
     strncpy(sender_ip, argv[2], 15);
     strncpy(target_ip, argv[3], 15);
@@ -93,7 +93,7 @@ int main (int argc, char *argv[], char *envp[]) {
     spoofing = (arp*)malloc(sizeof(arp));
 
     setvbuf(stdout, 0LL, 1, 0LL);    
-	setvbuf(stderr, 0LL, 1, 0LL); 
+    setvbuf(stderr, 0LL, 1, 0LL); 
 
     fp = pcap_open_live(iface, BUFSIZ, 1, 1000, errbuf);
     
